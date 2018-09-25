@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dsp
+spec:
+  replicas: 10
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: dsp
+        tier: backend
+    spec:
+      containers:
+      - name: api
+        image: asia.gcr.io/${PROJECT_NAME}/adtech-python:latest
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        imagePullPolicy: Always
+        env:
+        - name: REDISHOST
+          valueFrom:
+            configMapKeyRef:
+              name: redishost
+              key: REDISHOST
+      - name: app
+        image: asia.gcr.io/${PROJECT_NAME}/adtech-node:latest
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        imagePullPolicy: Always
+        env:
+        - name: REDISHOST
+          valueFrom:
+            configMapKeyRef:
+              name: redishost
+              key: REDISHOST

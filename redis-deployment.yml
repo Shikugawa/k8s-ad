@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dsp-redis
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: dsp-redis
+    spec:
+      containers:
+      - name: redis
+        image: asia.gcr.io/${PROJECT_NAME}/adtech-redis-sample:latest
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        imagePullPolicy: Always
